@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channel & Chart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #172033;
+        }
+
+        header {
+            background: #1e293b;
+            color: white;
+            padding: 18px;
+            text-align: center;
+        }
+
+        nav {
+            background: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        nav button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 15px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #00000015;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .action {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .channel {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        canvas {
+            width: 100%;
+            max-height: 350px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>My Channel & Chart</h1>
+    <p>Welcome to my website</p>
+</header>
+
+<nav>
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('channels')">Channels</button>
+    <button onclick="showPage('charts')">Charts</button>
+</nav>
+
+<div class="container">
+
+    <!-- HOME -->
+    <section id="home" class="page active">
+        <div class="card">
+            <h2>Welcome</h2>
+            <p>Here you can manage channels and view charts.</p>
+            <p>Project Version 1</p>
+        </div>
+    </section>
+
+    <!-- CHANNELS -->
+    <section id="channels" class="page">
+        <div class="card">
+            <h2>Add a Channel</h2>
+
+            <input
+                type="text"
+                id="channelName"
+                placeholder="Enter channel name">
+
+            <input
+                type="text"
+                id="channelLink"
+                placeholder="Enter YouTube link">
+
+            <button class="action" onclick="addChannel()">
+                Add Channel
+            </button>
+        </div>
+
+        <div class="card">
+            <h2>My Channels</h2>
+            <div id="channelList"></div>
+        </div>
+    </section>
+
+    <!-- CHARTS -->
+    <section id="charts" class="page">
+        <div class="card">
+            <h2>Channel Chart</h2>
+
+            <canvas id="myChart" width="800" height="400"></canvas>
+
+            <p>
+                This chart displays example channel statistics.
+            </p>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    function showPage(pageId) {
+        document.querySelectorAll(".page").forEach(page => {
+            page.classList.remove("active");
+        });
+
+        document.getElementById(pageId).classList.add("active");
+    }
+
+    function addChannel() {
+        const name = document.getElementById("channelName").value.trim();
+        const link = document.getElementById("channelLink").value.trim();
+
+        if (name === "" || link === "") {
+            alert("Please enter channel name and link.");
+            return;
+        }
+
+        const channel = document.createElement("div");
+        channel.className = "channel";
+
+        const title = document.createElement("h3");
+        title.textContent = name;
+
+        const url = document.createElement("a");
+        url.href = link;
+        url.textContent = "Open Channel";
+        url.target = "_blank";
+        url.rel = "noopener noreferrer";
+
+        channel.appendChild(title);
+        channel.appendChild(url);
+
+        document.getElementById("channelList").appendChild(channel);
+
+        document.getElementById("channelName").value = "";
+        document.getElementById("channelLink").value = "";
+    }
+
+    const canvas = document.getElementById("myChart");
+    const ctx = canvas.getContext("2d");
+
+    const values = [20, 45, 70, 55, 90];
+    const labels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+    ctx.beginPath();
+    ctx.moveTo(50, 350);
+    ctx.lineTo(750, 350);
+    ctx.moveTo(50, 350);
+    ctx.lineTo(50, 30);
+    ctx.strokeStyle = "#334155";
+    ctx.stroke();
+
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#172033";
+
+    labels.forEach((label, i) => {
+        const x = 80 + i * 160;
+        ctx.fillText(label, x, 375);
+    });
+
+    ctx.beginPath();
+
+    values.forEach((value, i) => {
+        const x = 80 + i * 160;
+        const y = 350 - value * 3;
+
+        if (i === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    });
+
+    ctx.strokeStyle = "#2563eb";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    values.forEach((value, i) => {
+        const x = 80 + i * 160;
+        const y = 350 - value * 3;
+
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#16a34a";
+        ctx.fill();
+    });
+</script>
+
+</body>
+</html>
